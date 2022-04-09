@@ -1,12 +1,12 @@
 function findAuthorById(authors, id) {
  // returns the author object that has the matching id 
-
+ return authors.filter(authors => authors.id === id);
 
 }
 
 function findBookById(books, id) {
-//returns the book object with matching id
-
+//returns the book object with matching id 
+ return books.filter(books => books.id === id);
 }
 
 function partitionBooksByBorrowedStatus(books) {
