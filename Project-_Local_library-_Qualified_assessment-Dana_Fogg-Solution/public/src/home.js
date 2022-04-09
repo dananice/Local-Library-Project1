@@ -1,7 +1,6 @@
 function getTotalBooksCount(books) {
 // return number of books in array using a for loop
- let totalBooks = 0;
- for (let i = 0; i < books.length; i++)
+ return books.length;
  
 
 
