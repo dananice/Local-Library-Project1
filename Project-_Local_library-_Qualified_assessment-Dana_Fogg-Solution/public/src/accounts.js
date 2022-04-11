@@ -1,47 +1,65 @@
-function findAuthorById(authors, id) {
- // returns the author object that has the matching id 
- return authors.find(authors => authors.id === id);
-}
+function findAccountById(accounts, id) {
+ //use find() to find account by id    
+ let foundId = accounts.find((account) => account.id === id);
+ return foundId;
+  }
+  
+  function sortAccountsByLastName(accounts) {
+  //sort alphabetically by last name
+    accounts.sort((accountA, accountB) => accountA.name.last.toLower/case() >
+    accountB.name.last.toLowerCase() ? 1 : -1);
+    return accounts;
 
-function findBookById(books, id) {
- //returns the book object with matching id
+  }
+  
+  function getTotalNumberOfBorrows(account, books) {
+  //return a number that represents the # of times the 
+  //acc id appears in borrows 
+  // I will need to loop the books array  as well as loop through 
+  // the borrows array to match to the ID
 
- return books.find(books => books.id === id);
+  
+  let totalBorrowed = 0;
+  for( let i = 0; i < books.length; i++){
+      for( let j = 0; j < books[i].borrows.length; j++) {
+          if (account.id === books[i].borrows[j].id){
+              totalBorrowed += 1;
+          }
+      }
+  }
+  return totalBorrowed;
+  }
+  
+  function getBooksPossessedByAccount(account, books, authors) {
+  //returns array of book objects incl author info that represents 
+  //all books currently checked out by the given account 
+  //
+  let result = [];
+ let borrowMatch = [];
+ books.forEach((item) => {
+  const borrowed = item.borrows;
+  const book = {
+   id: item.id,
+   title: item.title,
+   genre: item.genre,
+   authorId: item.authorId,
+   author: {},
+   borrows: {}
+  };
+  const { id, title, genre, authorId, author, borrows } = book;
 
-
-}
-
-function partitionBooksByBorrowedStatus(books) {
-// returns array w/ 2 arrays inside of it all the inputted 
-// books are present in either the 1st or 2nd array
-//1st array contains book currently checked out
-//2nd array contains books that have been returned
-
-let booksReturned = books.filter((book) =>
-  book.borrows.every((borrow) => borrow.returned === true)
- );
- let booksBorrowed = books.filter((book) =>
-  book.borrows.some((borrow) => borrow.returned === false)
- );
- let secondArray = [[...booksBorrowed], [...booksReturned]];
- return secondArray;
-}
-
-function getBorrowersForBook(book, accounts) {
- //return an array of ten or fewer account objects that 
- //represents the accounts given by the ID in the provided
- //books borrows array each account should incl the returned 
- // entry from the corresponding transactions object in the 
- //borrows array  
-
- function getBorrowersForBook(book, accounts) {
-    return book.borrows.map((borrow) => {
-      let account = accounts.find((account) => account.id === borrow.id);
-      return { ...borrow, ...account };
-     })
-     .slice(0, 10);
-
-}
+  borrowed.forEach((borrow) => {
+   if (borrow.id === account.id && borrow.returned === false) {
+    result.push(book);
+    borrowMatch.push(borrow);
+    book.borrows = borrowMatch;
+    book.author = authors.filter((auth) => auth.id === book.authorId)[0];
+   }
+  });
+ });
+ return result;
+  }
+  
 module.exports = {
   findAccountById,
   sortAccountsByLastName,
